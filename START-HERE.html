@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Search Tool — Start Here</title>
+<style>
+  :root{
+    --paper:#F6F6F1;
+    --card:#FFFFFF;
+    --ink:#18211C;
+    --ink-soft:#47534C;
+    --muted:#79837C;
+    --line:#E4E4DC;
+    --line-soft:#EEEEE7;
+    --green:#1B6B4B;
+    --green-bright:#2E9E6B;
+    --green-tint:#E9F1EC;
+    --gold:#A9761B;
+    --gold-tint:#F5EAD2;
+    --blue:#2764C4;
+    --term:#1B2621;
+    --term-text:#DDE6DF;
+    --term-muted:#7C8C82;
+
+    --serif:"Charter","Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:"SF Mono","JetBrains Mono","Cascadia Code",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  .wrap{max-width:840px;margin:0 auto;padding:0 24px 96px;}
+
+  /* ---------- Header ---------- */
+  header.top{padding:64px 0 40px;border-bottom:1px solid var(--line);}
+  .eyebrow{
+    font-family:var(--sans);
+    font-size:.72rem;
+    font-weight:600;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--green);
+    margin:0 0 18px;
+  }
+  h1{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:clamp(2.3rem,6vw,3.3rem);
+    line-height:1.06;
+    letter-spacing:-.01em;
+    margin:0 0 18px;
+    text-wrap:balance;
+  }
+  .lede{
+    font-size:1.2rem;
+    line-height:1.55;
+    color:var(--ink-soft);
+    max-width:60ch;
+    margin:0;
+  }
+  .lede b{color:var(--ink);font-weight:600;}
+
+  /* ---------- Stat strip ---------- */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+    margin-top:40px;
+  }
+  .stat{background:var(--card);padding:20px 18px;}
+  .stat .num{
+    font-family:var(--serif);
+    font-size:1.9rem;
+    font-weight:600;
+    line-height:1;
+    color:var(--green);
+    font-variant-numeric:tabular-nums;
+  }
+  .stat .lab{
+    display:block;
+    margin-top:8px;
+    font-size:.78rem;
+    color:var(--muted);
+    line-height:1.35;
+  }
+
+  /* ---------- Sections ---------- */
+  section{padding-top:56px;}
+  .kicker{
+    font-size:.72rem;
+    font-weight:600;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin:0 0 12px;
+  }
+  h2{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:1.85rem;
+    line-height:1.15;
+    letter-spacing:-.01em;
+    margin:0 0 16px;
+    text-wrap:balance;
+  }
+  h3{
+    font-family:var(--sans);
+    font-weight:650;
+    font-size:1.05rem;
+    margin:0 0 6px;
+  }
+  p{margin:0 0 16px;max-width:66ch;}
+  p.tight{margin-bottom:8px;}
+  .ink-soft{color:var(--ink-soft);}
+
+  /* ---------- How-it-works flow ---------- */
+  .flow{
+    display:grid;
+    grid-template-columns:1fr auto 1fr auto 1fr;
+    align-items:stretch;
+    gap:14px;
+    margin:8px 0 4px;
+  }
+  .flow-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:22px 20px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .flow-card .fnum{
+    font-family:var(--serif);
+    font-size:.95rem;
+    color:var(--green);
+    font-weight:700;
+  }
+  .flow-card h3{margin:0;font-size:1rem;}
+  .flow-card p{margin:0;font-size:.9rem;color:var(--ink-soft);}
+  .flow-arrow{
+    align-self:center;
+    color:var(--green-bright);
+    font-size:1.4rem;
+    line-height:1;
+  }
+
+  /* ---------- Spreadsheet preview ---------- */
+  .sheet-frame{
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+    background:var(--card);
+    box-shadow:0 1px 0 rgba(24,33,28,.03),0 12px 30px -18px rgba(24,33,28,.28);
+  }
+  .sheet-bar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:11px 16px;
+    background:#EFEFE9;
+    border-bottom:1px solid var(--line);
+  }
+  .dot{width:11px;height:11px;border-radius:50%;background:#CFCFC6;}
+  .sheet-bar .fname{
+    margin-left:8px;
+    font-family:var(--mono);
+    font-size:.78rem;
+    color:var(--ink-soft);
+  }
+  .sheet-scroll{overflow-x:auto;}
+  table.sheet{
+    border-collapse:collapse;
+    width:100%;
+    min-width:720px;
+    font-size:.82rem;
+  }
+  table.sheet th{
+    background:var(--green);
+    color:#fff;
+    font-family:var(--sans);
+    font-weight:600;
+    font-size:.72rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    text-align:left;
+    padding:11px 14px;
+    white-space:nowrap;
+    position:sticky;
+    top:0;
+  }
+  table.sheet td{
+    padding:11px 14px;
+    border-bottom:1px solid var(--line-soft);
+    vertical-align:top;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  table.sheet tr:nth-child(even) td{background:#FAFAF6;}
+  .sal{
+    font-family:var(--mono);
+    font-size:.78rem;
+    background:var(--gold-tint);
+    color:var(--gold);
+    padding:2px 8px;
+    border-radius:6px;
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+  }
+  .sal.none{background:#F0F0EA;color:var(--muted);}
+  .pill{
+    font-size:.72rem;
+    padding:2px 9px;
+    border-radius:100px;
+    border:1px solid var(--line);
+    color:var(--ink-soft);
+    background:#fff;
+  }
+  .lnk{color:var(--blue);text-decoration:none;font-weight:600;}
+  .lnk:hover{text-decoration:underline;}
+  .caption{font-size:.8rem;color:var(--muted);margin-top:12px;}
+
+  /* ---------- Numbered steps ---------- */
+  .steps{display:flex;flex-direction:column;gap:22px;margin-top:8px;}
+  .step{display:grid;grid-template-columns:44px 1fr;gap:18px;align-items:start;}
+  .badge{
+    width:44px;height:44px;border-radius:50%;
+    background:var(--green);color:#fff;
+    font-family:var(--serif);font-weight:700;font-size:1.25rem;
+    display:flex;align-items:center;justify-content:center;
+    font-variant-numeric:tabular-nums;
+  }
+  .step-body{padding-top:2px;}
+  .step-body h3{margin-bottom:6px;}
+  .step-body p{margin-bottom:10px;}
+
+  /* ---------- Code / terminal ---------- */
+  .code{
+    background:var(--term);
+    color:var(--term-text);
+    font-family:var(--mono);
+    font-size:.86rem;
+    line-height:1.7;
+    border-radius:10px;
+    padding:16px 18px;
+    overflow-x:auto;
+    margin:0 0 14px;
+  }
+  .code .prompt{color:var(--green-bright);user-select:none;}
+  .code .cmt{color:var(--term-muted);}
+  .code .out{color:var(--term-muted);}
+  code.inline{
+    font-family:var(--mono);
+    font-size:.86em;
+    background:#ECECE4;
+    padding:1px 6px;
+    border-radius:5px;
+    color:var(--ink);
+  }
+
+  /* annotated settings block */
+  .settings{
+    background:var(--term);
+    border-radius:12px;
+    padding:20px 22px;
+    font-family:var(--mono);
+    font-size:.85rem;
+    line-height:1.75;
+    color:var(--term-text);
+    overflow-x:auto;
+  }
+  .settings .k{color:#8FD3AC;}
+  .settings .s{color:#E4C57E;}
+  .settings .c{color:var(--term-muted);}
+  .settings .n{color:#C3B0E8;}
+
+  /* ---------- Callout ---------- */
+  .note{
+    display:flex;gap:14px;
+    background:var(--green-tint);
+    border:1px solid #CFE4D6;
+    border-radius:12px;
+    padding:16px 18px;
+    margin:6px 0 16px;
+  }
+  .note .ic{color:var(--green);font-weight:700;flex:none;font-family:var(--serif);}
+  .note p{margin:0;font-size:.92rem;color:#2C4438;}
+  .note.warn{background:var(--gold-tint);border-color:#E6D2A3;}
+  .note.warn .ic{color:var(--gold);}
+  .note.warn p{color:#5C4514;}
+
+  /* ---------- Column glossary ---------- */
+  .glossary{
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+    margin-top:8px;
+  }
+  .grow{
+    display:grid;
+    grid-template-columns:150px 1fr;
+    gap:0;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .grow:last-child{border-bottom:none;}
+  .grow:nth-child(even){background:#FAFAF6;}
+  .grow .gname{
+    padding:12px 16px;
+    font-weight:650;
+    font-size:.9rem;
+    border-right:1px solid var(--line-soft);
+    color:var(--ink);
+  }
+  .grow .gdesc{padding:12px 16px;font-size:.9rem;color:var(--ink-soft);}
+
+  /* ---------- Tips ---------- */
+  .tips{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px;}
+  .tip{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:18px 20px;
+  }
+  .tip h3{font-size:.98rem;margin-bottom:4px;}
+  .tip p{font-size:.88rem;color:var(--ink-soft);margin:0;}
+
+  /* ---------- Powered-by / improvements ---------- */
+  .improve{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px;}
+  .imp-col{border:1px solid var(--line);border-radius:12px;padding:20px 22px;background:var(--card);}
+  .imp-col.added{background:var(--green-tint);border-color:#CFE4D6;}
+  .imp-col h3{font-size:.9rem;margin-bottom:14px;color:var(--ink-soft);letter-spacing:.02em;}
+  .imp-col.added h3{color:var(--green);}
+  .imp-col ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px;}
+  .imp-col li{font-size:.88rem;color:var(--ink-soft);line-height:1.4;padding-left:20px;position:relative;}
+  .imp-col li::before{content:"–";position:absolute;left:2px;color:var(--muted);}
+  .imp-col.added li::before{content:"+";color:var(--green-bright);font-weight:700;}
+  .imp-col.added li{color:#2C4438;}
+
+  /* ---------- Footer ---------- */
+  footer{
+    margin-top:72px;padding-top:28px;border-top:1px solid var(--line);
+    color:var(--muted);font-size:.85rem;
+  }
+  footer b{color:var(--ink-soft);}
+
+  a:focus-visible,.lnk:focus-visible{outline:2px solid var(--green-bright);outline-offset:2px;border-radius:3px;}
+
+  @media (max-width:680px){
+    body{font-size:16px;}
+    .stats{grid-template-columns:1fr 1fr;}
+    .flow{grid-template-columns:1fr;}
+    .flow-arrow{transform:rotate(90deg);justify-self:center;}
+    .tips,.improve{grid-template-columns:1fr;}
+    .grow{grid-template-columns:1fr;}
+    .grow .gname{border-right:none;border-bottom:1px solid var(--line-soft);}
+  }
+  @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <p class="eyebrow">Job Search Tool · Start Here</p>
+    <h1>Find fresh job postings, in one clean spreadsheet.</h1>
+    <p class="lede">You type in the job titles you care about. The tool searches the big job boards, throws out the duplicates, and hands you a single <b>tidy Excel file</b> — title, company, salary, and a clickable link for every posting.</p>
+
+    <div class="stats">
+      <div class="stat"><span class="num">306</span><span class="lab">jobs in one sample run</span></div>
+      <div class="stat"><span class="num">4</span><span class="lab">job boards searched</span></div>
+      <div class="stat"><span class="num">10</span><span class="lab">details per posting</span></div>
+      <div class="stat"><span class="num">~2</span><span class="lab">minutes to run</span></div>
+    </div>
+  </header>
+
+  <!-- ============ WHAT YOU GET ============ -->
+  <section>
+    <p class="kicker">What you get</p>
+    <h2>One spreadsheet that's actually pleasant to read</h2>
+    <p class="ink-soft">Every run produces a date-stamped Excel file like the one below. The header row is frozen and every column has a filter dropdown, so you can sort by salary, filter to remote roles, or narrow to one company in a couple of clicks.</p>
+
+    <div class="sheet-frame">
+      <div class="sheet-bar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="fname">Job_Postings_2026-07-02_1719.xlsx</span>
+      </div>
+      <div class="sheet-scroll">
+        <table class="sheet">
+          <thead>
+            <tr>
+              <th>Job Title</th><th>Company</th><th>Location</th><th>Salary</th>
+              <th>Remote?</th><th>Posted</th><th>Source</th><th>Link</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Sales Development Representative</td><td>Coverflow</td><td>San Francisco, CA</td>
+              <td><span class="sal">$60,000 – $120,000/yr</span></td><td>No</td><td>2026-07-01</td>
+              <td><span class="pill">indeed</span></td><td><a class="lnk" href="#" onclick="return false">View »</a></td>
+            </tr>
+            <tr>
+              <td>Homeowners Sales Representative</td><td>Freeway Insurance</td><td>San Francisco, CA</td>
+              <td><span class="sal">$60,000 – $150,000/yr</span></td><td>No</td><td>2026-07-01</td>
+              <td><span class="pill">indeed</span></td><td><a class="lnk" href="#" onclick="return false">View »</a></td>
+            </tr>
+            <tr>
+              <td>Account Executive, Mid-Market</td><td>Ramp</td><td>Remote</td>
+              <td><span class="sal">$130,000 – $165,000/yr</span></td><td>Yes</td><td>2026-07-02</td>
+              <td><span class="pill">linkedin</span></td><td><a class="lnk" href="#" onclick="return false">View »</a></td>
+            </tr>
+            <tr>
+              <td>Medical Sales Representative</td><td>Stryker</td><td>Oakland, CA</td>
+              <td><span class="sal none">Not listed</span></td><td>No</td><td>2026-06-30</td>
+              <td><span class="pill">linkedin</span></td><td><a class="lnk" href="#" onclick="return false">View »</a></td>
+            </tr>
+            <tr>
+              <td>Sales Associate</td><td>Body Fit Training</td><td>Menlo Park, CA</td>
+              <td><span class="sal">$19 – $25/hr</span></td><td>No</td><td>2026-07-01</td>
+              <td><span class="pill">indeed</span></td><td><a class="lnk" href="#" onclick="return false">View »</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="caption">Real rows from a sample run. The file also includes <b>Job Type</b> and a full <b>Description</b> column (hidden here for space).</p>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section>
+    <p class="kicker">How it works</p>
+    <h2>Three moving parts, and you only touch the first</h2>
+    <div class="flow">
+      <div class="flow-card">
+        <span class="fnum">You</span>
+        <h3>Pick your titles</h3>
+        <p>List the roles and the location you want — the only thing you edit.</p>
+      </div>
+      <div class="flow-arrow" aria-hidden="true">→</div>
+      <div class="flow-card">
+        <span class="fnum">The tool</span>
+        <h3>Searches &amp; cleans</h3>
+        <p>Queries every job board, merges the results, and drops duplicate postings.</p>
+      </div>
+      <div class="flow-arrow" aria-hidden="true">→</div>
+      <div class="flow-card">
+        <span class="fnum">You</span>
+        <h3>Open the Excel</h3>
+        <p>A fresh, date-stamped file lands in this folder. Sort, filter, apply.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SETUP ============ -->
+  <section>
+    <p class="kicker">Part 1 · One-time setup</p>
+    <h2>Get it ready (about 5 minutes)</h2>
+    <p class="ink-soft">You only do this once on a computer. If Python is already installed, skip straight to step&nbsp;2.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="badge">1</div>
+        <div class="step-body">
+          <h3>Make sure you have Python</h3>
+          <p>Open the <b>Terminal</b> app (Mac) or <b>Command Prompt</b> (Windows) and type this, then press Enter:</p>
+          <div class="code"><span class="prompt">$</span> python3 --version</div>
+          <p class="tight">If it prints something like <code class="inline">Python 3.11.x</code>, you're set. If not, download it from <b>python.org/downloads</b> — on Windows, tick <b>“Add Python to PATH”</b> during install.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="badge">2</div>
+        <div class="step-body">
+          <h3>Open this folder in the terminal</h3>
+          <p>Type <code class="inline">cd</code> followed by a space, then drag this folder onto the terminal window (it fills in the path for you) and press Enter:</p>
+          <div class="code"><span class="prompt">$</span> cd <span class="cmt">"…/Job Search Tool"</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="badge">3</div>
+        <div class="step-body">
+          <h3>Install the pieces it needs</h3>
+          <p>Run this once. It downloads the three small packages the tool relies on:</p>
+          <div class="code"><span class="prompt">$</span> pip install -r requirements.txt</div>
+          <div class="note">
+            <span class="ic">✓</span>
+            <p>When it finishes without red errors, setup is done — you never have to repeat this on this computer.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CUSTOMIZE ============ -->
+  <section>
+    <p class="kicker">Part 2 · Choose what to search</p>
+    <h2>Tell it what you're looking for</h2>
+    <p class="ink-soft">Open <code class="inline">job_search.py</code> in any text editor (TextEdit, Notepad, VS Code — anything). At the very top is a <b>SETTINGS</b> block. These are the only lines you change:</p>
+
+    <div class="settings">
+<span class="c"># The roles you want — add or remove lines freely</span>
+<span class="k">JOB_TITLES</span> = [
+    <span class="s">"Sales Representative"</span>,
+    <span class="s">"Medical Sales Representative"</span>,
+    <span class="s">"Account Executive"</span>,
+]
+
+<span class="c"># Where to search: a city, or "Remote"</span>
+<span class="k">LOCATION</span> = <span class="s">"San Francisco, CA"</span>
+
+<span class="c"># How recent? 24 = last day · 72 = 3 days · 168 = week</span>
+<span class="k">HOURS_OLD</span> = <span class="n">72</span>
+
+<span class="c"># Hide titles containing these words (leave [] to keep all)</span>
+<span class="k">EXCLUDE_TITLE_KEYWORDS</span> = [<span class="s">"Senior"</span>, <span class="s">"Director"</span>]
+    </div>
+
+    <div class="note">
+      <span class="ic">i</span>
+      <p><b>Keep the formatting exactly as shown:</b> each title wrapped in "quotes", with a comma at the end of the line. Save the file when you're done. You never need to touch anything below the SETTINGS block.</p>
+    </div>
+  </section>
+
+  <!-- ============ RUN ============ -->
+  <section>
+    <p class="kicker">Part 3 · Run it</p>
+    <h2>Press go and get your list</h2>
+    <p class="ink-soft">Back in the terminal (still inside this folder), run:</p>
+    <div class="code"><span class="prompt">$</span> python job_search.py</div>
+    <p class="ink-soft">You'll see it work through each title. After a minute or two it finishes like this:</p>
+    <div class="code"><span class="cmt">  Searching: Sales Representative ... found 100</span>
+<span class="cmt">  Searching: Medical Sales Representative ... found 88</span>
+<span class="cmt">  Searching: Account Executive ... found 100</span>
+
+<span class="out">  ============================================================</span>
+<span class="out">  Done! 306 unique job postings saved to:</span>
+<span class="out">     Job_Postings_2026-07-02_1719.xlsx</span>
+<span class="out">  ============================================================</span></div>
+    <div class="note">
+      <span class="ic">✓</span>
+      <p>That <code class="inline">.xlsx</code> file appears right here in this folder. Double-click to open it. Each run makes a <b>new date-stamped file</b>, so you never lose an earlier search.</p>
+    </div>
+  </section>
+
+  <!-- ============ READING RESULTS ============ -->
+  <section>
+    <p class="kicker">Using your results</p>
+    <h2>What every column means</h2>
+    <div class="glossary">
+      <div class="grow"><div class="gname">Job Title</div><div class="gdesc">The posting's title, exactly as listed on the board.</div></div>
+      <div class="grow"><div class="gname">Company</div><div class="gdesc">Who's hiring. Occasionally blank when the board hides it.</div></div>
+      <div class="grow"><div class="gname">Location</div><div class="gdesc">City and state, or “Remote.”</div></div>
+      <div class="grow"><div class="gname">Salary</div><div class="gdesc">Pay range when the employer published one — otherwise “Not listed.”</div></div>
+      <div class="grow"><div class="gname">Job Type</div><div class="gdesc">Full-time, part-time, contract, and so on.</div></div>
+      <div class="grow"><div class="gname">Remote?</div><div class="gdesc">Yes or No, when the board flags it.</div></div>
+      <div class="grow"><div class="gname">Date Posted</div><div class="gdesc">When it went up. The file is sorted newest-first.</div></div>
+      <div class="grow"><div class="gname">Source</div><div class="gdesc">Which board it came from (Indeed, LinkedIn, etc.).</div></div>
+      <div class="grow"><div class="gname">Link</div><div class="gdesc">Click to open the posting and apply.</div></div>
+      <div class="grow"><div class="gname">Description</div><div class="gdesc">The full job text when the board includes it — otherwise “Click link to find description.”</div></div>
+    </div>
+
+    <h2 style="margin-top:44px;">Three tricks that make it powerful</h2>
+    <div class="tips">
+      <div class="tip"><h3>Sort by salary</h3><p>Click the <b>Salary</b> filter arrow → Sort. The best-paying roles jump to the top.</p></div>
+      <div class="tip"><h3>Filter to remote</h3><p>Click the <b>Remote?</b> dropdown and tick “Yes” to see only work-from-home roles.</p></div>
+      <div class="tip"><h3>Focus one company</h3><p>Use the <b>Company</b> dropdown to isolate every opening at a place you're targeting.</p></div>
+      <div class="tip"><h3>Jump straight to apply</h3><p>The <b>Link</b> cells are clickable — no copy-pasting URLs.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ GOOD TO KNOW ============ -->
+  <section>
+    <p class="kicker">Good to know</p>
+    <h2>A few honest notes</h2>
+    <div class="note">
+      <span class="ic">i</span>
+      <p><b>Fewer results than expected?</b> The job boards sometimes throttle automated searches — LinkedIn and Indeed are the most reliable; ZipRecruiter and Glassdoor can come up empty on any given run. Just wait a bit and run it again.</p>
+    </div>
+    <div class="note warn">
+      <span class="ic">!</span>
+      <p><b>“Not listed” salaries are normal.</b> Many employers don't publish pay. Roughly a third of postings include a salary — those show a range; the rest say “Not listed.”</p>
+    </div>
+    <div class="note">
+      <span class="ic">i</span>
+      <p><b>Want to search different roles later?</b> Just reopen <code class="inline">job_search.py</code>, change the <code class="inline">JOB_TITLES</code> or <code class="inline">LOCATION</code>, save, and run it again. That's the whole loop.</p>
+    </div>
+  </section>
+
+  <!-- ============ POWERED BY JOBSPY ============ -->
+  <section>
+    <p class="kicker">Under the hood</p>
+    <h2>Powered by JobSpy</h2>
+    <p class="ink-soft">The actual searching of the job boards is handled by <b>JobSpy</b> — an excellent open-source library (<a class="lnk" href="https://github.com/speedyapply/JobSpy">github.com/speedyapply/JobSpy</a>, MIT-licensed). This tool doesn't replace it; it wraps it. Same proven engine, repackaged so a person — not a programmer — can use it in a minute.</p>
+    <div class="improve">
+      <div class="imp-col">
+        <h3>JobSpy on its own gives you</h3>
+        <ul>
+          <li>A code function with 15+ arguments to call</li>
+          <li>One job title per search</li>
+          <li>A raw 34-column data table</li>
+          <li>Duplicate postings across boards</li>
+          <li>Salary split across four separate columns</li>
+          <li>No spreadsheet — you build and style it yourself</li>
+        </ul>
+      </div>
+      <div class="imp-col added">
+        <h3>This tool adds on top</h3>
+        <ul>
+          <li>A plain-English SETTINGS block — no coding</li>
+          <li>Many job titles searched in one run</li>
+          <li>Just the 10 columns that matter, renamed clearly</li>
+          <li>Duplicates removed automatically</li>
+          <li>Clean, readable salaries like “$80,000 – $120,000/yr”</li>
+          <li>A finished Excel: frozen header, filters, clickable links</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p><b>Job Search Tool.</b> Everything you need is in this folder: <code class="inline">job_search.py</code> (the tool), <code class="inline">requirements.txt</code> (its pieces), and this guide. Sample output: <code class="inline">Job_Postings_2026-07-02_1719.xlsx</code>.</p>
+    <p style="margin-top:10px;">Powered by <b>JobSpy</b> (<code class="inline">python-jobspy</code>) · MIT License · <a class="lnk" href="https://github.com/speedyapply/JobSpy">github.com/speedyapply/JobSpy</a></p>
+  </footer>
+
+</div>
+</body>
+</html>

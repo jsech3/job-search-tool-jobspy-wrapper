@@ -1,0 +1,15 @@
+# Generated result files (each run creates a new date-stamped Excel)
+Job_Postings_*.xlsx
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+env/
+.env
+
+# Editor / OS cruft
+.DS_Store
+.vscode/
+.idea/
