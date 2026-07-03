@@ -8,8 +8,11 @@ posting, all in one place.
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Powered by JobSpy](https://img.shields.io/badge/powered%20by-JobSpy-1B6B4B)
 
-> **Not a coder?** Open **`START-HERE.html`** in your browser for a friendly, visual
-> step-by-step walkthrough.
+> **New here? Start with the visual guide.** Click the green **`Code`** button above →
+> **Download ZIP**, unzip the folder, then open **`START-HERE.html`** in your browser for a
+> friendly, step-by-step walkthrough.
+> *(Heads up: GitHub shows `START-HERE.html` as raw code if you click it here — it only
+> renders as a real page once the folder is downloaded to your computer.)*
 
 ---
 
